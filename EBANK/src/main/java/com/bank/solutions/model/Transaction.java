@@ -20,7 +20,6 @@ public class Transaction {
     private Date date;
 
     private Double amount;
-
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 

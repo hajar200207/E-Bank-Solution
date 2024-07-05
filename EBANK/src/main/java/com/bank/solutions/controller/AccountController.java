@@ -60,5 +60,10 @@ public class AccountController {
         Account updatedAccount = accountService.updateAccount(id, account);
         return new ResponseEntity<>(AccountMapper.INSTANCE.accountToAccountDTO(updatedAccount), HttpStatus.OK);
     }
+
+    @PostMapping("/close/{accountId}")
+    public Account closeAccount(@PathVariable Long accountId, @RequestParam String reason) {
+        return accountService.closeAccount(accountId, reason);
+    }
 }
 

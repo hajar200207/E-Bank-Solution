@@ -20,7 +20,8 @@ public class Account {
     private Double balance;
     @Temporal(TemporalType.DATE)
     private java.util.Date creationDate;
-
+    private boolean closed = false;
+    private String closureReason;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -53,5 +54,9 @@ public class Account {
         transaction.setDate(new Date());
         transactions.add(transaction);
         balance += amount;
+    }
+    public void closeAccount(String reason) {
+        this.closed = true;
+        this.closureReason = reason;
     }
 }

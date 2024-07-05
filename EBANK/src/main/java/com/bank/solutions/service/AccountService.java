@@ -39,4 +39,14 @@ public class AccountService {
     public void deleteAccount(Long id) {
         accountRepository.deleteById(id);
     }
+
+    public Account closeAccount(Long accountId, String reason) {
+        Optional<Account> optionalAccount = accountRepository.findById(accountId);
+        if (optionalAccount.isPresent()) {
+            Account account = optionalAccount.get();
+            account.closeAccount(reason);
+            return accountRepository.save(account);
+        }
+        throw new RuntimeException("Account not found");
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,9 @@ public class TransactionService {
         account.setBalance(account.getBalance() + (type == TransactionType.CREDIT ? amount : -amount));
         transactionRepository.save(transaction);
         return transaction;
+    }
+
+    public List<Transaction> getAllTransactions(Long accountId) {
+        return transactionRepository.findByAccount_AccountId(accountId);
     }
 }

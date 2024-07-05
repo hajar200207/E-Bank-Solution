@@ -23,6 +23,8 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BankCard> bankCards;
 
     public Account createAccount(String type, Double initialBalance) {
         Account account = new Account();
