@@ -20,6 +20,8 @@ public class User {
     private String name;
     private String email;
     private String password;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Beneficiary> beneficiaries = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts = new ArrayList<>();
@@ -36,5 +38,54 @@ public class User {
         return account;
     }
 
+    public void addBeneficiary(Beneficiary beneficiary) {
+        this.beneficiaries.add(beneficiary);
+        beneficiary.setUser(this);
+    }
+
+    public void removeBeneficiary(Long beneficiaryId) {
+        Beneficiary beneficiary = findBeneficiaryById(beneficiaryId);
+        if (beneficiary != null) {
+            this.beneficiaries.remove(beneficiary);
+            beneficiary.setUser(null);
+        }
+    }
+
+    public void transferMoney(Double amount, Long fromAccountId, Long toAccountId, String description) {
+        Account fromAccount = findAccountById(fromAccountId);
+        Account toAccount = findAccountById(toAccountId);
+
+        if (fromAccount != null && toAccount != null) {
+            fromAccount.debit(amount, description);
+            toAccount.credit(amount, description);
+        } else {
+            throw new IllegalArgumentException("One or both accounts not found");
+        }
+    }
+
+    public void transferMoneyExternal(Double amount, Long fromAccountId, ExternalAccountDetails toAccountDetails, String description) {
+        Account fromAccount = findAccountById(fromAccountId);
+
+        if (fromAccount != null) {
+            // Implement external transfer logic here
+            // This could involve validations and external API calls
+        } else {
+            throw new IllegalArgumentException("From account not found");
+        }
+    }
+
+    private Account findAccountById(Long accountId) {
+        return this.accounts.stream()
+                .filter(account -> account.getAccountId().equals(accountId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private Beneficiary findBeneficiaryById(Long beneficiaryId) {
+        return this.beneficiaries.stream()
+                .filter(beneficiary -> beneficiary.getId().equals(beneficiaryId))
+                .findFirst()
+                .orElse(null);
+    }
 
 }
